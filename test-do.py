@@ -1,10 +1,24 @@
 from pymodbus.client import ModbusSerialClient
 import time
+import argparse
 
-PORT = "/dev/ttyUSB0"
-SLAVE_ID = 4
-DO1_COIL_ADDR = 0x0140
-DO2_COIL_ADDR = 0x0141
+## Ohjelman käyttö:
+##  $: sudo python3 test-do.py --port ttyUSB1
+##  $: sudo python3 test-do.py --port /dev/ttyUSB1
+
+parser = argparse.ArgumentParser(description="Cycle Modbus DO coils on R1212")
+parser.add_argument(
+    "--port",
+    required=True,
+    help="Serial port, e.g. ttyUSB0, ttyUSB1 or /dev/ttyUSB0"
+)
+args = parser.parse_args()
+
+PORT = args.port if args.port.startswith("/") else f"/dev/{args.port}"
+
+SLAVE_ID = 1
+DO1_COIL_ADDR = 0x0141
+DO2_COIL_ADDR = 0x0142
 
 client = ModbusSerialClient(
     port=PORT,

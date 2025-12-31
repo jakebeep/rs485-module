@@ -2,8 +2,22 @@ from pymodbus.client import ModbusSerialClient
 import time
 import signal
 import sys
+import argparse
 
-PORT = "/dev/ttyUSB0"
+## Ohjelman käyttö:
+##  $: sudo python3 cycle-coils.py --port ttyUSB1
+##  $: sudo python3 cycle-coils.py --port /dev/ttyUSB1
+
+parser = argparse.ArgumentParser(description="Cycle Modbus DO coils on R1212")
+parser.add_argument(
+    "--port",
+    required=True,
+    help="Serial port, e.g. ttyUSB0, ttyUSB1 or /dev/ttyUSB0"
+)
+args = parser.parse_args()
+
+PORT = args.port if args.port.startswith("/") else f"/dev/{args.port}"
+
 SLAVES = [1, 2]
 
 COIL_ADDR = [0x0140, 0x0141, 0x0142, 0x0143, 0x0144, 0x0145, 0x0146, 0x0147]
